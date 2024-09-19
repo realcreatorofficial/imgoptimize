@@ -256,9 +256,13 @@ export async function applyValidatedOperation(
     ? await currentInstance.metadata()
     : null;
 
-  const { orientation } = await currentInstance?.metadata();
-  functions.logger.debug(`orientation`, orientation);
-    
+  let orientationFinal: any;
+  if (currentInstance) {
+    const { orientation } = await currentInstance?.metadata();
+    functions.logger.debug(`orientation`, orientation);
+    orientationFinal = orientation;
+  }
+
   functions.logger.debug(`currentMetadata`, currentMetadata);
   const builtOperation = await asBuiltOperation(
     validatedOperation,
@@ -273,8 +277,13 @@ export async function applyValidatedOperation(
       currentInstance = (
         currentInstance[action.method] as (...args: unknown[]) => sharp.Sharp
       )(...action.arguments);
-      const newBuffer = await currentInstance.withMetadata({ orientation }).toBuffer();
-      currentInstance = sharp(newBuffer);
+      if (orientationFinal) {
+        const newBuffer = await currentInstance.withMetadata({ orientation: orientationFinal }).toBuffer();
+        currentInstance = sharp(newBuffer);
+      } else {
+        const newBuffer = await currentInstance.toBuffer();
+        currentInstance = sharp(newBuffer);
+      }
     }
   }
   functions.logger.debug(`validatedOperation`, validatedOperation);
