@@ -61,8 +61,23 @@ async function processImageRequest(
   // Apply operations.
   let instance: sharp.Sharp | null = null;
 
+  let isCheckRotate = false;
   for (let i = 0; i < validatedOperations.length; i++) {
     const validatedOperation = validatedOperations[i];
+    if (instance) {
+      if (!isCheckRotate) {
+        const metadataCheck = await (instance as sharp.Sharp).metadata();
+        if ((metadataCheck && metadataCheck?.orientation === 6)) {
+          instance = await applyValidatedOperation(instance, {"source":"","operation":"rotate","rawOptions":{"operation":"rotate","angle":90},"options":{"angle":90}});
+          // validatedOperations.splice(validatedOperations.length - 2, 0, {"source":"","operation":"rotate","rawOptions":{"operation":"rotate","angle":90},"options":{"angle":90}},);
+          // for (let i = 0; i < validatedOperations.length; i++) {
+          //   const validatedOperation = validatedOperations[i];
+          //   instance = await applyValidatedOperation(instance, validatedOperation);
+          // }
+          isCheckRotate = true;
+        }
+      }
+    }
     instance = await applyValidatedOperation(instance, validatedOperation);
   }
 
@@ -70,19 +85,6 @@ async function processImageRequest(
     await (instance as sharp.Sharp).metadata(),
     fileMetadataBufferKeys,
   );
-
-  // if ((finalFileMetadata?.height || 0 )< (finalFileMetadata?.width || 0)) {
-  //   validatedOperations.splice(validatedOperations.length - 2, 0, {"source":"","operation":"rotate","rawOptions":{"operation":"rotate","angle":90},"options":{"angle":90}},);
-  //   for (let i = 0; i < validatedOperations.length; i++) {
-  //     const validatedOperation = validatedOperations[i];
-  //     instance = await applyValidatedOperation(instance, validatedOperation);
-  //   }
-  
-  //   finalFileMetadata = omitKeys(
-  //     await (instance as sharp.Sharp).metadata(),
-  //     fileMetadataBufferKeys,
-  //   );
-  // }
 
   if (lastOperation.debug == true) {
     res.json({

@@ -267,32 +267,32 @@ export async function applyValidatedOperation(
     functions.logger.debug(`action.`);
     functions.logger.debug(action);
     if (action.method == 'constructor') {
-      currentInstance = sharp(...(action.arguments as SharpOptions[])).withMetadata({orientation: 1});
+      currentInstance = sharp(...(action.arguments as SharpOptions[]));
     } else if (currentInstance != null) {
-      currentMetadata = currentInstance
-      ? await currentInstance.metadata()
-      : null;
-      functions.logger.debug(`currentMetadataFirst`);
-      functions.logger.debug(currentMetadata);
+      // currentMetadata = currentInstance
+      // ? await currentInstance.metadata()
+      // : null;
+      // functions.logger.debug(`currentMetadataFirst`);
+      // functions.logger.debug(currentMetadata);
       
-      let orientationFinal: any;
-      let widthFinal: any;
-      let heightFinal: any;
-      if (currentMetadata && currentMetadata.orientation) {
-        functions.logger.debug(`orientation current`);
-        functions.logger.debug(currentMetadata.orientation);
-        orientationFinal = currentMetadata.orientation;
-        heightFinal = currentMetadata.height;
-        widthFinal = currentMetadata.width;
-        if (currentInstance && orientationFinal === 6) {
-          currentMetadata.height = widthFinal;
-          currentMetadata.width = heightFinal;
-          currentMetadata.orientation = 1;
-        }
-      }
+      // let orientationFinal: any;
+      // let widthFinal: any;
+      // let heightFinal: any;
+      // if (currentMetadata && currentMetadata.orientation) {
+      //   functions.logger.debug(`orientation current`);
+      //   functions.logger.debug(currentMetadata.orientation);
+      //   orientationFinal = currentMetadata.orientation;
+      //   heightFinal = currentMetadata.height;
+      //   widthFinal = currentMetadata.width;
+      //   if (currentInstance && orientationFinal === 6) {
+      //     currentMetadata.height = widthFinal;
+      //     currentMetadata.width = heightFinal;
+      //     currentMetadata.orientation = 1;
+      //   }
+      // }
 
-      functions.logger.debug(`currentMetadataUpdate`);
-      functions.logger.debug(currentMetadata);
+      // functions.logger.debug(`currentMetadataUpdate`);
+      // functions.logger.debug(currentMetadata);
     
       currentInstance = (
         currentInstance[action.method] as (...args: unknown[]) => sharp.Sharp
@@ -301,11 +301,14 @@ export async function applyValidatedOperation(
       currentInstance = sharp(newBuffer);
     }
   }
-  const currentMetadataFinal = await currentInstance?.metadata();
-  if (currentMetadataFinal) {
-    functions.logger.debug(`currentMetadataFinal`);
-    functions.logger.debug(currentMetadataFinal);
-  }
+  // const currentMetadataFinal = await currentInstance?.metadata();
+  // if (currentMetadataFinal) {
+  //   functions.logger.debug(`currentMetadataFinal`);
+  //   functions.logger.debug(currentMetadataFinal);
+  //   if (currentMetadataFinal && currentMetadataFinal.orientation === 6) {
+
+  //   }
+  // }
 
   // if (currentInstance && orientationFinal === 6) {
   //   const newBuffer = await currentInstance.withMetadata({ orientation: 1 }).toBuffer();
