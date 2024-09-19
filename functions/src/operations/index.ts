@@ -256,7 +256,7 @@ export async function applyValidatedOperation(
     ? await currentInstance.metadata()
     : null;
 
-  const { orientation } = await currentInstance.metadata();
+  const { orientation } = await currentInstance?.metadata();
   functions.logger.debug(`orientation`, orientation);
     
   functions.logger.debug(`currentMetadata`, currentMetadata);
@@ -273,7 +273,7 @@ export async function applyValidatedOperation(
       currentInstance = (
         currentInstance[action.method] as (...args: unknown[]) => sharp.Sharp
       )(...action.arguments);
-      const newBuffer = await currentInstance.toBuffer();
+      const newBuffer = await currentInstance.withMetadata({ orientation }).toBuffer();
       currentInstance = sharp(newBuffer);
     }
   }
