@@ -277,8 +277,8 @@ export async function applyValidatedOperation(
       currentInstance = (
         currentInstance[action.method] as (...args: unknown[]) => sharp.Sharp
       )(...action.arguments);
-      if (orientationFinal) {
-        const newBuffer = await currentInstance.withMetadata({ orientation: orientationFinal }).toBuffer();
+      if (orientationFinal !== 1) {
+        const newBuffer = await currentInstance.withMetadata({ orientation: 1 }).toBuffer();
         currentInstance = sharp(newBuffer);
       } else {
         const newBuffer = await currentInstance.toBuffer();
