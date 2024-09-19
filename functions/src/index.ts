@@ -60,6 +60,7 @@ async function processImageRequest(
 
   // Apply operations.
   let instance: sharp.Sharp | null = null;
+
   for (let i = 0; i < validatedOperations.length; i++) {
     const validatedOperation = validatedOperations[i];
     instance = await applyValidatedOperation(instance, validatedOperation);
@@ -70,20 +71,20 @@ async function processImageRequest(
     fileMetadataBufferKeys,
   );
 
-  if ((finalFileMetadata?.height || 0 )< (finalFileMetadata?.width || 0)) {
-    validatedOperations.splice(validatedOperations.length - 2, 0, {"source":"","operation":"rotate","rawOptions":{"operation":"rotate","angle":90},"options":{"angle":90}},);
-    for (let i = 0; i < validatedOperations.length; i++) {
-      const validatedOperation = validatedOperations[i];
-      instance = await applyValidatedOperation(instance, validatedOperation);
-    }
+  // if ((finalFileMetadata?.height || 0 )< (finalFileMetadata?.width || 0)) {
+  //   validatedOperations.splice(validatedOperations.length - 2, 0, {"source":"","operation":"rotate","rawOptions":{"operation":"rotate","angle":90},"options":{"angle":90}},);
+  //   for (let i = 0; i < validatedOperations.length; i++) {
+  //     const validatedOperation = validatedOperations[i];
+  //     instance = await applyValidatedOperation(instance, validatedOperation);
+  //   }
   
-    finalFileMetadata = omitKeys(
-      await (instance as sharp.Sharp).metadata(),
-      fileMetadataBufferKeys,
-    );
-  }
+  //   finalFileMetadata = omitKeys(
+  //     await (instance as sharp.Sharp).metadata(),
+  //     fileMetadataBufferKeys,
+  //   );
+  // }
 
-  if (lastOperation.options.debug == true) {
+  if (lastOperation.debug == true) {
     res.json({
       operations: validatedOperations,
       metadata: finalFileMetadata,
@@ -215,13 +216,13 @@ app.use('*', function notFoundHandler(_req, res) {
   res.status(404).send('Not Found');
 });
 
-// if (process.env.EXPRESS_SERVER === 'true') {
-//   app.listen(3001, 'localhost', () =>
-//     functions.logger.info(
-//       `Local dev server listening on http://localhost:3001`,
-//     ),
-//   );
-// } else {
-firebase.initializeApp();
-exports.handler = functions.handler.https.onRequest(app);
-// }
+if (process.env.EXPRESS_SERVER === 'true') {
+  app.listen(3001, 'localhost', () =>
+    functions.logger.info(
+      `Local dev server listening on http://localhost:3001`,
+    ),
+  );
+} else {
+  firebase.initializeApp();
+  exports.handler = functions.handler.https.onRequest(app);
+}

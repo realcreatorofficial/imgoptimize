@@ -18,6 +18,8 @@ import { AssertionError } from 'assert';
 import sharp, { SharpOptions } from 'sharp';
 import superstruct from 'superstruct';
 
+import * as functions from 'firebase-functions';
+
 import { omitKey, omitUndefinedValues } from '../utils';
 import {
   ActionBuilder,
@@ -259,6 +261,8 @@ export async function applyValidatedOperation(
   );
   for (let i = 0; i < builtOperation.actions.length; i++) {
     const action = builtOperation.actions[i];
+    console.log("action", action);
+    functions.logger.debug(`action.`, action);
     if (action.method == 'constructor') {
       currentInstance = sharp(...(action.arguments as SharpOptions[]));
     } else if (currentInstance != null) {
@@ -269,5 +273,7 @@ export async function applyValidatedOperation(
       currentInstance = sharp(newBuffer);
     }
   }
+  functions.logger.debug(`validatedOperation`, validatedOperation);
+  functions.logger.debug(`currentInstance`, currentInstance);
   return currentInstance as sharp.Sharp;
 }
