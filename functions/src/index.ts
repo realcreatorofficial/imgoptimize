@@ -99,7 +99,7 @@ async function processImageRequest(
   });
   const { data, info } = output;
 
-  functions.logger.debug(`Processed a new request.`, validatedOperations);
+  // functions.logger.debug(`Processed a new request.`, validatedOperations);
 
   const headers = {
     'Content-Type': `image/${info.format}`,

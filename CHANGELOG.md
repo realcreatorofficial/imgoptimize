@@ -49,3 +49,7 @@ Default Orientation 1 and switch width to height
 ## Version 2.0.9
 
 Default Orientation 1 and switch width to height
+
+## Version 3.0.0
+
+Default Orientation 1 and switch width to height

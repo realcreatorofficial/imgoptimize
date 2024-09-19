@@ -251,8 +251,8 @@ export async function applyValidatedOperation(
   instance: sharp.Sharp | null,
   validatedOperation: ValidatedOperation,
 ): Promise<sharp.Sharp> {
-  functions.logger.debug(`applyValidatedOperation.`);
-  functions.logger.debug(validatedOperation);
+  // functions.logger.debug(`applyValidatedOperation.`);
+  // functions.logger.debug(validatedOperation);
   let currentInstance = instance;
   let currentMetadata = currentInstance
     ? await currentInstance.metadata()
@@ -264,8 +264,8 @@ export async function applyValidatedOperation(
   );
   for (let i = 0; i < builtOperation.actions.length; i++) {
     const action = builtOperation.actions[i];
-    functions.logger.debug(`action.`);
-    functions.logger.debug(action);
+    // functions.logger.debug(`action.`);
+    // functions.logger.debug(action);
     if (action.method == 'constructor') {
       currentInstance = sharp(...(action.arguments as SharpOptions[]));
     } else if (currentInstance != null) {
