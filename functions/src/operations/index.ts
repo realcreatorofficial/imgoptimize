@@ -261,7 +261,6 @@ export async function applyValidatedOperation(
   );
   for (let i = 0; i < builtOperation.actions.length; i++) {
     const action = builtOperation.actions[i];
-    console.log("action", action);
     functions.logger.debug(`action.`, action);
     if (action.method == 'constructor') {
       currentInstance = sharp(...(action.arguments as SharpOptions[]));
@@ -275,5 +274,7 @@ export async function applyValidatedOperation(
   }
   functions.logger.debug(`validatedOperation`, validatedOperation);
   functions.logger.debug(`currentInstance`, currentInstance);
+  functions.logger.debug(`currentInstance orientation`, currentInstance?.orientation);
+  functions.logger.debug(`currentInstance rotate`, currentInstance?.rotate);
   return currentInstance as sharp.Sharp;
 }

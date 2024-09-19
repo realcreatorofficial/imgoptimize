@@ -21,3 +21,7 @@ Fix Rotate to 90 for Portrait
 ## Version 2.0.2
 
 Add Logs
+
+## Version 2.0.3
+
+Add Logs
