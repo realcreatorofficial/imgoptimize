@@ -287,8 +287,10 @@ export async function applyValidatedOperation(
     functions.logger.debug(`orientationFinal`, currentMetadataFinal?.orientation);
   }
 
-  const newBuffer = await currentInstance.withMetadata({ orientation: 1 }).toBuffer();
-  currentInstance = sharp(newBuffer);
+  if (currentInstance) {
+    const newBuffer = await currentInstance.withMetadata({ orientation: 1 }).toBuffer();
+    currentInstance = sharp(newBuffer);
+  }
 
   return currentInstance as sharp.Sharp;
 }
