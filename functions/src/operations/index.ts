@@ -267,7 +267,7 @@ export async function applyValidatedOperation(
     functions.logger.debug(`action.`);
     functions.logger.debug(action);
     if (action.method == 'constructor') {
-      currentInstance = sharp(...(action.arguments as SharpOptions[]));
+      currentInstance = sharp(...(action.arguments as SharpOptions[])).withMetadata({orientation: 1});
     } else if (currentInstance != null) {
       currentMetadata = currentInstance
       ? await currentInstance.metadata()
@@ -296,7 +296,7 @@ export async function applyValidatedOperation(
     
       currentInstance = (
         currentInstance[action.method] as (...args: unknown[]) => sharp.Sharp
-      )(...action.arguments);
+      )(...action.arguments).withMetadata({orientation: 1});
       const newBuffer = await currentInstance.toBuffer();
       currentInstance = sharp(newBuffer);
     }
