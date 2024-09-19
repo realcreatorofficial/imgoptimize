@@ -251,39 +251,49 @@ export async function applyValidatedOperation(
   instance: sharp.Sharp | null,
   validatedOperation: ValidatedOperation,
 ): Promise<sharp.Sharp> {
+  functions.logger.debug(`applyValidatedOperation.`);
+  functions.logger.debug(validatedOperation);
   let currentInstance = instance;
-  const currentMetadata = currentInstance
+  let currentMetadata = currentInstance
     ? await currentInstance.metadata()
     : null;
 
-  functions.logger.debug(`currentMetadataFirst`, currentMetadata);
-
-  let orientationFinal: any;
-  let widthFinal: any;
-  let heightFinal: any;
-  if (currentMetadata && currentMetadata.orientation) {
-    functions.logger.debug(`orientation current`, currentMetadata.orientation);
-    orientationFinal = currentMetadata.orientation;
-    heightFinal = currentMetadata.height;
-    widthFinal = currentMetadata.width;
-    if (currentInstance && orientationFinal === 6) {
-      currentMetadata.height = widthFinal;
-      currentMetadata.width = heightFinal;
-      currentMetadata.orientation = 1;
-    }
-  }
-
-  functions.logger.debug(`currentMetadataUpdate`, currentMetadata);
   const builtOperation = await asBuiltOperation(
     validatedOperation,
     currentMetadata,
   );
   for (let i = 0; i < builtOperation.actions.length; i++) {
     const action = builtOperation.actions[i];
-    functions.logger.debug(`action.`, action);
+    functions.logger.debug(`action.`);
+    functions.logger.debug(action);
     if (action.method == 'constructor') {
       currentInstance = sharp(...(action.arguments as SharpOptions[]));
     } else if (currentInstance != null) {
+      currentMetadata = currentInstance
+      ? await currentInstance.metadata()
+      : null;
+      functions.logger.debug(`currentMetadataFirst`);
+      functions.logger.debug(currentMetadata);
+      
+      let orientationFinal: any;
+      let widthFinal: any;
+      let heightFinal: any;
+      if (currentMetadata && currentMetadata.orientation) {
+        functions.logger.debug(`orientation current`);
+        functions.logger.debug(currentMetadata.orientation);
+        orientationFinal = currentMetadata.orientation;
+        heightFinal = currentMetadata.height;
+        widthFinal = currentMetadata.width;
+        if (currentInstance && orientationFinal === 6) {
+          currentMetadata.height = widthFinal;
+          currentMetadata.width = heightFinal;
+          currentMetadata.orientation = 1;
+        }
+      }
+
+      functions.logger.debug(`currentMetadataUpdate`);
+      functions.logger.debug(currentMetadata);
+    
       currentInstance = (
         currentInstance[action.method] as (...args: unknown[]) => sharp.Sharp
       )(...action.arguments);
@@ -293,7 +303,8 @@ export async function applyValidatedOperation(
   }
   const currentMetadataFinal = await currentInstance?.metadata();
   if (currentMetadataFinal) {
-    functions.logger.debug(`currentMetadataFinal`, currentMetadataFinal);
+    functions.logger.debug(`currentMetadataFinal`);
+    functions.logger.debug(currentMetadataFinal);
   }
 
   // if (currentInstance && orientationFinal === 6) {
