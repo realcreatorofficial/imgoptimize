@@ -256,14 +256,24 @@ export async function applyValidatedOperation(
     ? await currentInstance.metadata()
     : null;
 
+  functions.logger.debug(`currentMetadataFirst`, currentMetadata);
+
   let orientationFinal: any;
-  if (currentInstance) {
-    const { orientation } = await currentInstance?.metadata();
-    functions.logger.debug(`orientation`, orientation);
-    orientationFinal = orientation;
+  let widthFinal: any;
+  let heightFinal: any;
+  if (currentMetadata && currentMetadata.orientation) {
+    functions.logger.debug(`orientation current`, currentMetadata.orientation);
+    orientationFinal = currentMetadata.orientation;
+    heightFinal = currentMetadata.height;
+    widthFinal = currentMetadata.width;
+    if (currentInstance && orientationFinal === 6) {
+      currentMetadata.height = widthFinal;
+      currentMetadata.width = heightFinal;
+      currentMetadata.orientation = 1;
+    }
   }
 
-  functions.logger.debug(`currentMetadata`, currentMetadata);
+  functions.logger.debug(`currentMetadataUpdate`, currentMetadata);
   const builtOperation = await asBuiltOperation(
     validatedOperation,
     currentMetadata,
@@ -281,16 +291,15 @@ export async function applyValidatedOperation(
       currentInstance = sharp(newBuffer);
     }
   }
-  functions.logger.debug(`currentInstance`, await currentInstance?.metadata());
   const currentMetadataFinal = await currentInstance?.metadata();
   if (currentMetadataFinal) {
-    functions.logger.debug(`orientationFinal`, currentMetadataFinal?.orientation);
+    functions.logger.debug(`currentMetadataFinal`, currentMetadataFinal);
   }
 
-  if (currentInstance) {
-    const newBuffer = await currentInstance.withMetadata({ orientation: 1 }).toBuffer();
-    currentInstance = sharp(newBuffer);
-  }
+  // if (currentInstance && orientationFinal === 6) {
+  //   const newBuffer = await currentInstance.withMetadata({ orientation: 1 }).toBuffer();
+  //   currentInstance = sharp(newBuffer);
+  // }
 
   return currentInstance as sharp.Sharp;
 }
