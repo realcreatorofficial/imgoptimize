@@ -255,6 +255,11 @@ export async function applyValidatedOperation(
   const currentMetadata = currentInstance
     ? await currentInstance.metadata()
     : null;
+
+  const { orientation } = await currentInstance.metadata();
+  functions.logger.debug(`orientation`, orientation);
+    
+  functions.logger.debug(`currentMetadata`, currentMetadata);
   const builtOperation = await asBuiltOperation(
     validatedOperation,
     currentMetadata,
@@ -274,7 +279,5 @@ export async function applyValidatedOperation(
   }
   functions.logger.debug(`validatedOperation`, validatedOperation);
   functions.logger.debug(`currentInstance`, currentInstance);
-  functions.logger.debug(`currentInstance orientation`, currentInstance?.orientation);
-  functions.logger.debug(`currentInstance rotate`, currentInstance?.rotate);
   return currentInstance as sharp.Sharp;
 }
