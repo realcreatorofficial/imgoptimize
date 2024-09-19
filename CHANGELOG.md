@@ -29,3 +29,7 @@ Add Logs
 ## Version 2.0.4
 
 Default Orientation 1
+
+## Version 2.0.5
+
+Default Orientation 1
