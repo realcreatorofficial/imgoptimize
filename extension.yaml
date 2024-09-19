@@ -38,7 +38,7 @@ resources:
     properties:
       location: ${param:LOCATION}
       runtime: nodejs14
-      availableMemoryMb: 4096
+      availableMemoryMb: 8192
       httpsTrigger: {}
 
 params:
