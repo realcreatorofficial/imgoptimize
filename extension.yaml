@@ -1,5 +1,5 @@
 name: imgoptimize
-version: 4.0.0
+version: 5.0.0
 specVersion: v1beta
 
 displayName: Image Optimize
@@ -38,7 +38,7 @@ resources:
     properties:
       location: ${param:LOCATION}
       runtime: nodejs14
-      availableMemoryMb: 256
+      availableMemoryMb: 512
       httpsTrigger: {}
 
 params:
